@@ -97,6 +97,84 @@
   .print-lab-hint { max-width: 640px; margin: 0.6rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
   .print-lab-hint a { color: #2d6e7e; text-decoration: underline; text-underline-offset: 2px; }
   .print-lab-hint a:hover { color: #23282a; }
+
+  /* --- Card back customization (same pattern/color system every GoodStockPress deck offers) --- */
+  .backcard-field { margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid #d7dedc; }
+  .backcard-eyebrow {
+    text-align: center; font-weight: 700; font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #8a938f; margin-bottom: 1.1rem;
+  }
+  .backcard-layout {
+    display: flex; gap: 1.6rem; align-items: flex-start; justify-content: center;
+    flex-wrap: wrap; max-width: 520px; margin: 0 auto;
+  }
+  .backcard-preview {
+    width: 130px; flex: none; aspect-ratio: 2.22 / 3.22; border-radius: 10px;
+    border: 1px solid #d7dedc; box-shadow: 0 4px 14px rgba(0,0,0,0.08); position: relative;
+    overflow: hidden; background-color: #f4f6f5; background-repeat: repeat;
+    background-size: auto; background-position: center;
+  }
+  .backcard-preview.has-photo { background-size: cover; background-repeat: no-repeat; }
+  .backcard-plate {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    background: #fff; border: 1.5px solid #2d6e7e; border-radius: 5px;
+    padding: 5px 9px; max-width: 84%;
+    font-family: inherit; font-weight: 700; font-size: 8px; color: #205062;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;
+  }
+  .backcard-controls { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 1.1rem; }
+  .backcard-controls > div > label:not(.toggle-row) {
+    display: block; font-weight: 700; font-size: 0.68rem;
+    letter-spacing: 0.06em; text-transform: uppercase; color: #8a938f; margin-bottom: 0.4rem;
+  }
+
+  .swatch-row { display: flex; gap: 7px; flex-wrap: wrap; }
+  .swatch-subgroup { margin-bottom: 10px; }
+  .swatch-subgroup:last-child { margin-bottom: 0; }
+  .swatch-subgroup-label {
+    display: block; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; color: #8a938f; opacity: 0.8; margin-bottom: 6px;
+  }
+  .swatch {
+    width: 30px; height: 30px; padding: 0; border: none; border-radius: 7px;
+    cursor: pointer; background-color: #fff; background-repeat: repeat; margin-top: 0;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+  }
+  .swatch:hover { transform: scale(1.07); }
+  .swatch.active { box-shadow: 0 0 0 2px #f4f6f5, 0 0 0 4px #2d6e7e; }
+  .color-swatch { border-radius: 50%; }
+
+  .toggle-row { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; margin-top: 0; }
+  .toggle-row span {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #8a938f; background: none; padding: 0;
+  }
+  .toggle-row input[type="checkbox"] {
+    appearance: none; flex-shrink: 0; width: 34px; height: 20px; border-radius: 999px;
+    background: #d7dedc; position: relative; cursor: pointer; margin-top: 0; padding: 0;
+    transition: background 0.15s ease;
+  }
+  .toggle-row input[type="checkbox"]::before {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff; transition: transform 0.15s ease;
+  }
+  .toggle-row input[type="checkbox"]:checked { background: #2d6e7e; }
+  .toggle-row input[type="checkbox"]:checked::before { transform: translateX(14px); }
+
+  .backlabel-group { transition: opacity 0.15s ease; }
+  .backlabel-group.disabled { opacity: 0.45; pointer-events: none; }
+  .backlabel-group input {
+    text-align: center; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0;
+  }
+  .field-hint { font-size: 0.72rem; color: #8a938f; margin-top: 0.4rem; }
+  .backphoto-group .photo-controls, .backphoto-group button { margin-top: 0; }
+  .photo-controls { display: flex; gap: 8px; }
+  .photo-controls button {
+    background: transparent; color: #1d3c40; border: 1px solid #1d3c40;
+    font-size: 0.75rem; padding: 0.5rem 0.9rem;
+  }
+  .photo-controls button:hover { background: #1d3c40; color: #fff; }
 </style>
 </head>
 <body>
@@ -160,6 +238,45 @@
       <li>3 personalized goal cards</li>
       <li>2 motivation cards</li>
     </ul>
+
+    <div class="backcard-field">
+      <div class="backcard-eyebrow">Card back</div>
+      <div class="backcard-layout">
+        <div class="backcard-preview" id="backcardPreview">
+          <div class="backcard-plate" id="backcardPlate">GOODSTOCKPRESS</div>
+        </div>
+        <div class="backcard-controls">
+          <div class="backpattern-group">
+            <label>Pattern</label>
+            <div id="patternSwatches"></div>
+          </div>
+          <div class="backcolor-group">
+            <label>Color</label>
+            <div class="swatch-row" id="colorSwatches"></div>
+          </div>
+          <div class="backtext-group">
+            <label class="toggle-row" for="backShowTextToggle">
+              <input type="checkbox" id="backShowTextToggle" checked>
+              <span>Show text on card back</span>
+            </label>
+          </div>
+          <div class="backlabel-group" id="backLabelGroup">
+            <label for="backLabelInput">Card back label (optional)</label>
+            <input type="text" id="backLabelInput" placeholder="GOODSTOCKPRESS" maxlength="24">
+            <div class="field-hint">Printed in the center of every card back. Leave blank for the default.</div>
+          </div>
+          <div class="backphoto-group">
+            <label>Card back photo (optional)</label>
+            <div class="photo-controls">
+              <button type="button" id="addBackPhotoBtn">Add photo</button>
+              <button type="button" id="removeBackPhotoBtn" style="display:none">Remove</button>
+            </div>
+            <div class="field-hint">Replaces the pattern behind every card. Portrait photos work best.</div>
+            <input type="file" id="backPhotoInput" accept="image/*" style="display:none">
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="actions-bar">
       <div class="actions">

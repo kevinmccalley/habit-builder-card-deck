@@ -32,6 +32,14 @@ const CARDS_PER_PAGE = vm.runInContext("CARDS_PER_PAGE", sandbox);
 const slotXY = vm.runInContext("slotXY", sandbox);
 const drawInstructionsPage = vm.runInContext("drawInstructionsPage", sandbox);
 const drawCardBackPage = vm.runInContext("drawCardBackPage", sandbox);
+const BACK_COLORS = vm.runInContext("BACK_COLORS", sandbox);
+const BACK_PATTERNS = vm.runInContext("BACK_PATTERNS", sandbox);
+const BACK_PATTERN_DRAW = vm.runInContext("BACK_PATTERN_DRAW", sandbox);
+
+// --- 0. Card-back customization system is fully ported (parity check) -----
+check(BACK_COLORS.length === 5, `5 back colors available (got ${BACK_COLORS.length})`);
+check(BACK_PATTERNS.length === 10, `10 back patterns available (got ${BACK_PATTERNS.length})`);
+check(BACK_PATTERNS.every((p) => typeof BACK_PATTERN_DRAW[p.id] === "function"), "every listed pattern has a matching draw function");
 
 // --- 1. Content-bank structure matches the locked architecture ------------
 check(HABIT_DECK_DATA.framework.length === 4, `4 framework cards (got ${HABIT_DECK_DATA.framework.length})`);
@@ -94,6 +102,13 @@ const STUB_ICON = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+
 const stubIconPngs = {};
 HABIT_DECK_DATA.promptCategories.forEach((cat) => { stubIconPngs[cat.id] = `data:image/png;base64,${STUB_ICON}`; });
 
+// Simulate a buyer picking a non-default back color (red, not the module's
+// navy default) — exercises the same ACCENT-reassignment path
+// downloadPdf() uses so front cards match the chosen back, without calling
+// downloadPdf() itself (it needs window.jspdf, browser-only).
+const chosenColor = BACK_COLORS.find((c) => c.id === "red");
+vm.runInContext(`ACCENT = ${JSON.stringify(chosenColor.rgb)};`, sandbox);
+
 const pdfDoc = new jsPDF({ unit: "in", format: "letter" });
 pdfDoc.setFont("helvetica", "normal");
 // jsPDF doesn't have a "Poppins" font loaded in this harness — patch the
@@ -106,7 +121,7 @@ let drawError = null;
 try {
   drawInstructionsPage(pdfDoc, "Test Buyer");
   pdfDoc.addPage();
-  drawCardBackPage(pdfDoc);
+  drawCardBackPage(pdfDoc, "MY HABITS", null, "rosette", chosenColor.rgb, true);
 
   deck.forEach((entry, i) => {
     const posOnPage = i % CARDS_PER_PAGE;
