@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Habit-Builder Card Deck — Build a Habit That Sticks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A 48-card habit-building deck — the cue-routine-reward loop, ready-to-use prompt cards, trackers, and reset cards for when you slip. Add your own goal, download, print at home.">
+<meta property="og:title" content="Habit-Builder Card Deck">
+<meta property="og:description" content="48 cards to help you build a habit that actually sticks — framework, prompts, trackers, and reset cards. Instant digital download.">
+<meta property="og:image" content="/logo.png">
+<meta property="og:type" content="website">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: #f4f6f5;
+    color: #23282a;
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  .site-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #d7dedc;
+  }
+  .site-header .logo-mark { width: 50px; height: 50px; flex: none; display: block; }
+  .site-header .wordmark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1d3c40;
+    line-height: 1.2;
+  }
+  .site-header .tagline { font-size: 0.78rem; color: #2d6e7e; font-style: italic; margin-top: 2px; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+  p.sub { color: #62706e; margin-top: 0; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid #d7dedc;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-top: 0.25rem;
+    font-family: inherit;
+    background: #fff;
+  }
+  .field-block { margin-bottom: 1.25rem; }
+  .field-block label { font-weight: 600; display: block; }
+  .field-block .hint { font-weight: 400; color: #8a938f; font-size: 0.85rem; display: block; margin-top: 0.15rem; }
+  button {
+    background: #1d3c40;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  button:hover { background: #142a2d; }
+  .error { color: #b3261e; min-height: 1.2em; margin-top: 0.5rem; }
+  #results-summary { padding-left: 1.2rem; }
+  #results-summary li { margin-bottom: 0.4rem; line-height: 1.4; }
+  #screen-results { padding-bottom: 5.5rem; }
+  .actions-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #f4f6f5;
+    border-top: 1px solid #d7dedc;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+    padding: 0.85rem 1rem;
+    z-index: 100;
+  }
+  .actions {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .actions button { margin-top: 0; }
+  .actions button.secondary {
+    background: transparent;
+    color: #1d3c40;
+    border: 1px solid #1d3c40;
+  }
+  .print-lab-hint { max-width: 640px; margin: 0.6rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
+  .print-lab-hint a { color: #2d6e7e; text-decoration: underline; text-underline-offset: 2px; }
+  .print-lab-hint a:hover { color: #23282a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <img src="logo.png" alt="GoodStockPress logo" class="logo-mark">
+    <div>
+      <div class="wordmark">Habit-Builder Card Deck</div>
+      <div class="tagline">by <a href="https://goodstockpress.vercel.app" style="color:inherit;">GoodStockPress</a></div>
+    </div>
+  </header>
+
+  <section id="screen-passphrase" class="screen active">
+    <h1>Build Your Habit-Builder Deck</h1>
+    <p class="sub">A 48-card deck for building a habit that actually sticks — the cue-routine-reward loop, ready-to-use prompt cards, trackers, and reset cards for the days it doesn't go perfectly. <a href="https://www.etsy.com" target="_blank" rel="noopener">Buy on Etsy</a> to get your order number, then enter it below.</p>
+    <p class="sub">Enter your Etsy order number to get started — find it in your Etsy purchase confirmation or under Purchases &amp; Reviews on Etsy.</p>
+    <form id="passphrase-form">
+      <input type="text" id="passphrase-input" placeholder="Etsy order number" autocomplete="off">
+      <div class="error" id="passphrase-error"></div>
+      <button type="submit">Continue</button>
+    </form>
+  </section>
+
+  <section id="screen-form" class="screen">
+    <h1>Make It Yours</h1>
+    <p class="sub">Every deck ships with the same 44 cards — the habit-science framework, prompt cards, trackers, and reset cards. Add your name and up to 3 goals below and we'll print them right onto your own dedicated cards.</p>
+    <form id="goals-form">
+      <div class="field-block">
+        <label for="buyer-name">Your name (optional)</label>
+        <input type="text" id="buyer-name" placeholder="e.g. Alex" autocomplete="off" maxlength="40">
+        <span class="hint">Printed on your cover card. Leave blank for a plain "Habit-Builder Deck" cover.</span>
+      </div>
+      <div class="field-block">
+        <label for="goal-1">Goal or habit #1 (optional)</label>
+        <input type="text" id="goal-1" placeholder="e.g. Read every night before bed" maxlength="90">
+      </div>
+      <div class="field-block">
+        <label for="goal-2">Goal or habit #2 (optional)</label>
+        <input type="text" id="goal-2" placeholder="e.g. Walk 10 minutes after dinner" maxlength="90">
+      </div>
+      <div class="field-block">
+        <label for="goal-3">Goal or habit #3 (optional)</label>
+        <input type="text" id="goal-3" placeholder="e.g. Call one friend a week" maxlength="90">
+        <span class="hint">Each goal you enter gets its own dedicated card. Leave any of these blank and that card becomes a blank template instead.</span>
+      </div>
+      <div class="error" id="goals-error"></div>
+      <button type="submit">Build My Deck</button>
+    </form>
+  </section>
+
+  <section id="screen-results" class="screen">
+    <h1 id="results-name">Your Deck Is Ready</h1>
+    <p class="sub">Your 48-card Habit-Builder Deck includes:</p>
+    <ul id="results-summary">
+      <li>1 personalized cover card</li>
+      <li>4 framework cards — the habit loop, habit stacking, the two-minute rule, don't break the chain</li>
+      <li>24 cue-routine-reward prompt cards across Health &amp; Fitness, Mindfulness &amp; Mental Health, Productivity &amp; Focus, and Home &amp; Relationships</li>
+      <li>8 tracking &amp; streak cards — a 30-day grid, a weekly tracker, a monthly overview, and 5 streak milestones</li>
+      <li>6 reflection &amp; reset cards for the days it doesn't go perfectly</li>
+      <li>3 personalized goal cards</li>
+      <li>2 motivation cards</li>
+    </ul>
+
+    <div class="actions-bar">
+      <div class="actions">
+        <button id="download-btn">Download the PDF</button>
+        <button id="start-over-btn" class="secondary" type="button">Start Over</button>
+      </div>
+      <p class="print-lab-hint">Ready to print? <a href="https://goodstockpress.vercel.app/?product=habit-builder-card-deck" target="_blank" rel="noopener">Find your paper &amp; printing options at Print Lab →</a></p>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="data.js"></script>
+<script src="fonts.js"></script>
+<script src="phosphor-icons.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "habit-builder-card-deck",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "pdf-parse": "^2.4.5"
+  }
+}
