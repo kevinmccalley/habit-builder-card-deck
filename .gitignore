@@ -1,3 +1,7 @@
 node_modules/
 test-output.pdf
+captured.pdf
+*-deck.pdf
+server.log
+upload-server.log
 .vercel

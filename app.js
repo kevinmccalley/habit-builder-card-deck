@@ -186,6 +186,27 @@ function spacedTextWidth(doc, text, spacing) {
   return chars.map((ch) => doc.getTextWidth(ch)).reduce((a, b) => a + b, 0) + spacing * (chars.length - 1);
 }
 
+// Shrinks a body paragraph's font size until its wrapped line count fits
+// within maxHeight, rather than trusting a fixed font size never to
+// overflow — found via the real browser pass (2026-08-12) that every
+// framework card's body text was colliding with the footer tag: the
+// Helvetica-proxied Node harness never caught it because Poppins wraps
+// differently at the same nominal size. Same class of bug Wedding Party
+// Cards hit and fixed the same way.
+function fitParagraph(doc, text, maxWidth, maxHeight, startSize, minSize, lineHeightFactor) {
+  let size = startSize;
+  doc.setFont("Poppins", "normal");
+  while (size > minSize) {
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(text, maxWidth);
+    const blockHeight = lines.length * (size / 72) * lineHeightFactor;
+    if (blockHeight <= maxHeight) return { size, lines };
+    size -= 0.3;
+  }
+  doc.setFontSize(minSize);
+  return { size: minSize, lines: doc.splitTextToSize(text, maxWidth) };
+}
+
 function cardFrame(doc, x, y) {
   drawCropMarks(doc, x, y);
   doc.setDrawColor(...ACCENT);
@@ -249,11 +270,13 @@ function drawFrameworkCard(doc, x, y, card) {
   doc.setLineWidth(0.01);
   doc.line(x + inset, ty - 0.1, x + CARD_W - inset, ty - 0.1);
 
+  const bodyTop = ty + 0.12;
+  const bodyMaxHeight = (y + CARD_H - 0.34) - bodyTop; // leaves clearance above the footer tag
+  const { size: bodySize, lines: bodyLines } = fitParagraph(doc, card.body, CARD_W - inset * 2, bodyMaxHeight, 8.7, 6.5, 1.4);
   doc.setFont("Poppins", "normal");
-  doc.setFontSize(8.7);
+  doc.setFontSize(bodySize);
   doc.setTextColor(...INK);
-  const bodyLines = doc.splitTextToSize(card.body, CARD_W - inset * 2);
-  doc.text(bodyLines, cx, ty + 0.12, { align: "center", lineHeightFactor: 1.4 });
+  doc.text(bodyLines, cx, bodyTop, { align: "center", lineHeightFactor: 1.4 });
 
   footerTag(doc, cx, y + CARD_H - 0.22);
 }
@@ -396,10 +419,11 @@ function drawReflectionCard(doc, x, y, card) {
   doc.text(titleLines, cx, ty, { align: "center", lineHeightFactor: 1.25 });
   ty += titleLines.length * 0.2 + 0.22;
 
+  const bodyMaxHeight = (y + CARD_H - 0.34) - ty;
+  const { size: bodySize, lines: bodyLines } = fitParagraph(doc, card.body, CARD_W - inset * 2, bodyMaxHeight, 8.7, 6.5, 1.4);
   doc.setFont("Poppins", "normal");
-  doc.setFontSize(8.7);
+  doc.setFontSize(bodySize);
   doc.setTextColor(...INK);
-  const bodyLines = doc.splitTextToSize(card.body, CARD_W - inset * 2);
   doc.text(bodyLines, cx, ty, { align: "center", lineHeightFactor: 1.4 });
 
   footerTag(doc, cx, y + CARD_H - 0.22);

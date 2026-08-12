@@ -117,6 +117,35 @@ pdfDoc.setFont("helvetica", "normal");
 const realSetFont = pdfDoc.setFont.bind(pdfDoc);
 pdfDoc.setFont = (family, style) => realSetFont(family === "Poppins" ? "helvetica" : family, style === "bold" ? "bold" : "normal");
 
+// --- Worst-case text containment for framework + reflection cards ---------
+// Regression test for a real bug found in the 2026-08-12 browser pass: every
+// framework card's body text collided with the footer tag because nothing
+// checked wrapped line count against available card height. Fixed with
+// fitParagraph() (shrink-to-fit); this test guards against it recurring by
+// flagging any card whose body needs to shrink below a legibility floor —
+// which would mean the content itself is too long, not just a layout bug.
+const fitParagraph = vm.runInContext("fitParagraph", sandbox);
+const CARD_W_T = vm.runInContext("CARD_W", sandbox);
+const CARD_H_T = vm.runInContext("CARD_H", sandbox);
+
+HABIT_DECK_DATA.framework.forEach((card) => {
+  const inset = 0.28;
+  const titleLines = pdfDoc.splitTextToSize(card.title, CARD_W_T - inset * 2);
+  const ty = 0.68 + titleLines.length * 0.22 + 0.18;
+  const bodyMaxHeight = (CARD_H_T - 0.34) - (ty + 0.12);
+  const { size } = fitParagraph(pdfDoc, card.body, CARD_W_T - inset * 2, bodyMaxHeight, 8.7, 6.5, 1.4);
+  check(size >= 7.5, `framework card "${card.id}" body fits at readable size (shrank to ${size}pt, floor is 7.5pt) — "${card.title}"`);
+});
+
+HABIT_DECK_DATA.reflection.forEach((card) => {
+  const inset = 0.3;
+  const titleLines = pdfDoc.splitTextToSize(card.title, CARD_W_T - inset * 2);
+  const ty = 0.75 + titleLines.length * 0.2 + 0.22;
+  const bodyMaxHeight = (CARD_H_T - 0.34) - ty;
+  const { size } = fitParagraph(pdfDoc, card.body, CARD_W_T - inset * 2, bodyMaxHeight, 8.7, 6.5, 1.4);
+  check(size >= 7.5, `reflection card "${card.id}" body fits at readable size (shrank to ${size}pt, floor is 7.5pt) — "${card.title}"`);
+});
+
 let drawError = null;
 try {
   drawInstructionsPage(pdfDoc, "Test Buyer");
