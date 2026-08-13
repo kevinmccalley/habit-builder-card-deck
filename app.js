@@ -193,9 +193,9 @@ function spacedTextWidth(doc, text, spacing) {
 // Helvetica-proxied Node harness never caught it because Poppins wraps
 // differently at the same nominal size. Same class of bug Wedding Party
 // Cards hit and fixed the same way.
-function fitParagraph(doc, text, maxWidth, maxHeight, startSize, minSize, lineHeightFactor) {
+function fitParagraph(doc, text, maxWidth, maxHeight, startSize, minSize, lineHeightFactor, fontStyle) {
   let size = startSize;
-  doc.setFont("Poppins", "normal");
+  doc.setFont("Poppins", fontStyle || "normal");
   while (size > minSize) {
     doc.setFontSize(size);
     const lines = doc.splitTextToSize(text, maxWidth);
@@ -231,15 +231,18 @@ function drawCoverCard(doc, x, y, name) {
   doc.setTextColor(...ACCENT);
   centeredSpacedText(doc, "HABIT-BUILDER DECK", cx, y + 0.55, 0.03);
 
-  doc.setFont("Poppins", "bold");
-  doc.setFontSize(name ? 22 : 19);
   doc.setTextColor(...INK);
+  const titleInset = 0.32;
   const title = name ? `${name}'s Deck` : "Small Habits.\nReal Change.";
-  const lines = title.split("\n");
-  let ty = y + CARD_H / 2 - (lines.length - 1) * 0.14;
+  const startSize = name ? 22 : 19;
+  const { size: titleSize, lines } = fitParagraph(doc, title, CARD_W - titleInset * 2, 1.8, startSize, 11, 1.3, "bold");
+  doc.setFont("Poppins", "bold");
+  doc.setFontSize(titleSize);
+  const lineGap = (titleSize / 72) * 1.3;
+  let ty = y + CARD_H / 2 - ((lines.length - 1) * lineGap) / 2;
   lines.forEach((line) => {
     doc.text(line, cx, ty, { align: "center" });
-    ty += 0.28;
+    ty += lineGap;
   });
 
   doc.setDrawColor(...DIVIDER);

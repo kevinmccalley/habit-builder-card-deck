@@ -146,6 +146,28 @@ HABIT_DECK_DATA.reflection.forEach((card) => {
   check(size >= 7.5, `reflection card "${card.id}" body fits at readable size (shrank to ${size}pt, floor is 7.5pt) — "${card.title}"`);
 });
 
+// --- Cover card name never overflows the card width -----------------------
+// Regression test for a real bug found in Kevin's 2026-08-13 review: the
+// cover card's "{name}'s Deck" title was drawn as a single fixed-size line
+// with no wrapping or width check, so longer names ran straight off the
+// edge of the card. Fixed by routing the title through fitParagraph()
+// (shrink-to-fit, same pattern as framework/reflection bodies) instead of
+// drawing it as one unbroken line. This test guards against it recurring by
+// checking every wrapped line actually fits within the card's printable
+// width for a range of realistic and edge-case buyer names.
+const coverTitleInset = 0.32;
+const coverMaxWidth = CARD_W_T - coverTitleInset * 2;
+["Inego Montoya", "Alexandria", "Bartholomew Christopherson", "Sam", "Mary-Kate O'Sullivan"].forEach((name) => {
+  const title = `${name}'s Deck`;
+  pdfDoc.setFont("helvetica", "bold");
+  const { size, lines } = fitParagraph(pdfDoc, title, coverMaxWidth, 1.8, 22, 11, 1.3, "bold");
+  pdfDoc.setFontSize(size);
+  const overflowLine = lines.find((line) => pdfDoc.getTextWidth(line) > coverMaxWidth + 0.01);
+  check(!overflowLine, overflowLine
+    ? `cover card title for "${name}" stays within card width (line "${overflowLine}" would overflow)`
+    : `cover card title for "${name}" stays within card width`);
+});
+
 let drawError = null;
 try {
   drawInstructionsPage(pdfDoc, "Test Buyer");
