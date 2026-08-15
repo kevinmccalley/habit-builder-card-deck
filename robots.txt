@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://habit-builder-card-deck.vercel.app/sitemap.xml
