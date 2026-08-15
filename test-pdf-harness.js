@@ -196,6 +196,26 @@ check(pdfDoc.internal.getNumberOfPages() === expectedTotalPages,
   `page count is ${pdfDoc.internal.getNumberOfPages()}, expected ${expectedTotalPages} (1 instructions + 1 back + ${expectedCardPages} card pages of 6 each for 48 cards)`);
 check(deck.length % CARDS_PER_PAGE === 0, `48 cards fill the last page exactly (no leftover slots to design around)`);
 
+// --- Cricut cut-file SVG export --------------------------------------------
+console.log("\n=== Cricut cut-file SVG export ===");
+vm.runInContext(fs.readFileSync(path.join(DIR, "cricut-export.js"), "utf8"), sandbox, { filename: "cricut-export.js" });
+const buildCutFileSVG = vm.runInContext("buildCutFileSVG", sandbox);
+const CARD_W = vm.runInContext("CARD_W", sandbox);
+const CARD_H = vm.runInContext("CARD_H", sandbox);
+
+const fullPageSVG = buildCutFileSVG(CARDS_PER_PAGE);
+check(fullPageSVG.startsWith("<?xml") && fullPageSVG.includes('width="8.5in" height="11in" viewBox="0 0 8.5 11"'), "Cricut SVG is well-formed and correctly sized");
+check((fullPageSVG.match(/<rect /g) || []).length === CARDS_PER_PAGE, `Cricut full-page rect count is ${CARDS_PER_PAGE}`);
+let slotMismatch = null;
+for (let pos = 0; pos < CARDS_PER_PAGE; pos++) {
+  const [x, y] = slotXY(pos);
+  if (!fullPageSVG.includes(`x="${x}" y="${y}" width="${CARD_W}" height="${CARD_H}"`)) { slotMismatch = pos; break; }
+}
+check(slotMismatch === null, "every Cricut cut outline matches slotXY exactly" + (slotMismatch === null ? "" : ` (mismatch at pos ${slotMismatch})`));
+const partialRectCount = (buildCutFileSVG(2).match(/<rect /g) || []).length;
+check(partialRectCount === 2, `partial-page (2 cards) rect count is 2 (got ${partialRectCount})`);
+check(Math.ceil(deck.length / CARDS_PER_PAGE) === expectedCardPages, "Cricut cut-file front-page count matches PDF's own front-page count");
+
 const outPath = path.join(DIR, "test-output.pdf");
 fs.writeFileSync(outPath, Buffer.from(pdfDoc.output("arraybuffer")));
 console.log("Wrote " + outPath);

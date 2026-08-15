@@ -97,6 +97,7 @@
   }
   .print-lab-hint { max-width: 640px; margin: 0.6rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
   .print-lab-hint a { color: #2d6e7e; text-decoration: underline; text-underline-offset: 2px; }
+  .cricut-hint { max-width: 640px; margin: 0.3rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
   .print-lab-hint a:hover { color: #23282a; }
 
   /* --- Card back customization (same pattern/color system every GoodStockPress deck offers) --- */
@@ -282,18 +283,22 @@
     <div class="actions-bar">
       <div class="actions">
         <button id="download-btn">Download the PDF</button>
+        <button id="cricut-download-btn" class="secondary" type="button">Download Cricut Cut Files (SVG)</button>
         <button id="start-over-btn" class="secondary" type="button">Start Over</button>
       </div>
       <p class="print-lab-hint">Ready to print? <a href="https://goodstockpress.vercel.app/?product=habit-builder-card-deck" target="_blank" rel="noopener">Find your paper &amp; printing options at Print Lab →</a></p>
+      <p class="cricut-hint">Have a Cricut or other cutting machine? The SVG download cuts each card cleanly along the printed lines — no scissors needed.</p>
     </div>
   </section>
 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="data.js"></script>
 <script src="fonts.js"></script>
 <script src="phosphor-icons.js"></script>
 <script src="app.js"></script>
+<script src="cricut-export.js"></script>
 </body>
 </html>
