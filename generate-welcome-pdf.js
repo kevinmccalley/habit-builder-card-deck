@@ -11,7 +11,7 @@ const TAGLINE_GOLD = [199, 163, 88];
 const DIVIDER = [214, 199, 184];
 const CARD_BG = [244, 246, 248];
 
-const DOMAIN = "habit-builder-card-deck.vercel.app";
+const DOMAIN = "habit-builder-card-deck.goodstockpress.com";
 
 function loadPoppins(doc) {
   const fonts = fs.readFileSync(path.join(__dirname, "fonts.js"), "utf8");
