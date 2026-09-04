@@ -43,12 +43,24 @@
 <meta name="twitter:image" content="https://habit-builder-card-deck.vercel.app/og-image.png">
 <meta property="og:type" content="website">
 <style>
-  :root { color-scheme: light; }
+  :root {
+    color-scheme: light dark;
+    --bg: #a56629; --surface: #ba7533; --ink: #eae2db; --ink-soft: #dbc0a4;
+    --border: #cb8a4b; --accent: #8a5220; --accent-bright: #a5661f; --accent-soft: #ede5de;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #6c431b; --surface: #8c5723; --ink: #dcd1c5; --ink-soft: #cdad86;
+      --border: #c07a37; --accent-soft: #453321;
+    }
+  }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: #f4f6f5;
-    color: #23282a;
+    background:
+      linear-gradient(color-mix(in srgb, var(--bg) 87%, transparent), color-mix(in srgb, var(--bg) 87%, transparent)),
+      url('bg-photo.jpg') center/cover fixed;
+    color: var(--ink);
     margin: 0;
     padding: 2rem 1rem 4rem;
   }
@@ -59,36 +71,37 @@
     gap: 14px;
     margin-bottom: 1.75rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid #d7dedc;
+    border-bottom: 1px solid var(--border);
   }
   .site-header .logo-mark { width: 50px; height: 50px; flex: none; display: block; }
   .site-header .wordmark {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.15rem;
     font-weight: 700;
-    color: #1d3c40;
+    color: var(--ink);
     line-height: 1.2;
   }
-  .site-header .tagline { font-size: 0.78rem; color: #2d6e7e; font-style: italic; margin-top: 2px; }
+  .site-header .tagline { font-size: 0.78rem; color: var(--accent-bright); font-style: italic; margin-top: 2px; }
   h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
-  p.sub { color: #62706e; margin-top: 0; }
+  p.sub { color: var(--ink-soft); margin-top: 0; }
   .screen { display: none; }
   .screen.active { display: block; }
   input[type="text"] {
     width: 100%;
     padding: 0.6rem 0.7rem;
-    border: 1px solid #d7dedc;
+    border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 1rem;
     margin-top: 0.25rem;
     font-family: inherit;
-    background: #fff;
+    background: var(--surface);
+    color: var(--ink);
   }
   .field-block { margin-bottom: 1.25rem; }
   .field-block label { font-weight: 600; display: block; }
-  .field-block .hint { font-weight: 400; color: #8a938f; font-size: 0.85rem; display: block; margin-top: 0.15rem; }
+  .field-block .hint { font-weight: 400; color: var(--ink-soft); font-size: 0.85rem; display: block; margin-top: 0.15rem; }
   button {
-    background: #1d3c40;
+    background: var(--accent);
     color: #fff;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -97,8 +110,8 @@
     cursor: pointer;
     margin-top: 1rem;
   }
-  button:hover { background: #142a2d; }
-  .error { color: #b3261e; min-height: 1.2em; margin-top: 0.5rem; }
+  button:hover { background: var(--accent-bright); }
+  .error { color: #ffb4a8; min-height: 1.2em; margin-top: 0.5rem; }
   #results-summary { padding-left: 1.2rem; }
   #results-summary li { margin-bottom: 0.4rem; line-height: 1.4; }
   #screen-results { padding-bottom: 5.5rem; }
@@ -107,9 +120,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #f4f6f5;
-    border-top: 1px solid #d7dedc;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.25);
     padding: 0.85rem 1rem;
     z-index: 100;
   }
@@ -124,19 +137,19 @@
   .actions button { margin-top: 0; }
   .actions button.secondary {
     background: transparent;
-    color: #1d3c40;
-    border: 1px solid #1d3c40;
+    color: var(--ink);
+    border: 1px solid var(--border);
   }
-  .print-lab-hint { max-width: 640px; margin: 0.6rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
-  .print-lab-hint a { color: #2d6e7e; text-decoration: underline; text-underline-offset: 2px; }
-  .cricut-hint { max-width: 640px; margin: 0.3rem auto 0; text-align: center; font-size: 0.8rem; color: #8a938f; }
-  .print-lab-hint a:hover { color: #23282a; }
+  .print-lab-hint { max-width: 640px; margin: 0.6rem auto 0; text-align: center; font-size: 0.8rem; color: var(--ink-soft); }
+  .print-lab-hint a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+  .cricut-hint { max-width: 640px; margin: 0.3rem auto 0; text-align: center; font-size: 0.8rem; color: var(--ink-soft); }
+  .print-lab-hint a:hover { color: var(--ink); }
 
   /* --- Card back customization (same pattern/color system every GoodStockPress deck offers) --- */
-  .backcard-field { margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid #d7dedc; }
+  .backcard-field { margin-top: 2rem; padding-top: 1.75rem; border-top: 1px solid var(--border); }
   .backcard-eyebrow {
     text-align: center; font-weight: 700; font-size: 0.7rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: #8a938f; margin-bottom: 1.1rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1.1rem;
   }
   .backcard-layout {
     display: flex; gap: 1.6rem; align-items: flex-start; justify-content: center;
@@ -144,8 +157,8 @@
   }
   .backcard-preview {
     width: 130px; flex: none; aspect-ratio: 2.22 / 3.22; border-radius: 10px;
-    border: 1px solid #d7dedc; box-shadow: 0 4px 14px rgba(0,0,0,0.08); position: relative;
-    overflow: hidden; background-color: #f4f6f5; background-repeat: repeat;
+    border: 1px solid var(--border); box-shadow: 0 4px 14px rgba(0,0,0,0.08); position: relative;
+    overflow: hidden; background-color: var(--bg); background-repeat: repeat;
     background-size: auto; background-position: center;
   }
   .backcard-preview.has-photo { background-size: cover; background-repeat: no-repeat; }
@@ -160,7 +173,7 @@
   .backcard-controls { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 1.1rem; }
   .backcard-controls > div > label:not(.toggle-row) {
     display: block; font-weight: 700; font-size: 0.68rem;
-    letter-spacing: 0.06em; text-transform: uppercase; color: #8a938f; margin-bottom: 0.4rem;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem;
   }
 
   .swatch-row { display: flex; gap: 7px; flex-wrap: wrap; }
@@ -168,7 +181,7 @@
   .swatch-subgroup:last-child { margin-bottom: 0; }
   .swatch-subgroup-label {
     display: block; font-size: 0.62rem; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase; color: #8a938f; opacity: 0.8; margin-bottom: 6px;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); opacity: 0.8; margin-bottom: 6px;
   }
   .swatch {
     width: 30px; height: 30px; padding: 0; border: none; border-radius: 7px;
@@ -176,17 +189,17 @@
     transition: box-shadow 0.15s ease, transform 0.1s ease;
   }
   .swatch:hover { transform: scale(1.07); }
-  .swatch.active { box-shadow: 0 0 0 2px #f4f6f5, 0 0 0 4px #2d6e7e; }
+  .swatch.active { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px #2d6e7e; }
   .color-swatch { border-radius: 50%; }
 
   .toggle-row { display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; margin-top: 0; }
   .toggle-row span {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: #8a938f; background: none; padding: 0;
+    text-transform: uppercase; color: var(--ink-soft); background: none; padding: 0;
   }
   .toggle-row input[type="checkbox"] {
     appearance: none; flex-shrink: 0; width: 34px; height: 20px; border-radius: 999px;
-    background: #d7dedc; position: relative; cursor: pointer; margin-top: 0; padding: 0;
+    background: var(--border); position: relative; cursor: pointer; margin-top: 0; padding: 0;
     transition: background 0.15s ease;
   }
   .toggle-row input[type="checkbox"]::before {
@@ -201,7 +214,7 @@
   .backlabel-group input {
     text-align: center; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0;
   }
-  .field-hint { font-size: 0.72rem; color: #8a938f; margin-top: 0.4rem; }
+  .field-hint { font-size: 0.72rem; color: var(--ink-soft); margin-top: 0.4rem; }
   .backphoto-group .photo-controls, .backphoto-group button { margin-top: 0; }
   .photo-controls { display: flex; gap: 8px; }
   .photo-controls button {
