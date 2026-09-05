@@ -45,21 +45,19 @@
 <style>
   :root {
     color-scheme: light dark;
-    --bg: #a56629; --surface: #ba7533; --ink: #eae2db; --ink-soft: #dbc0a4;
-    --border: #cb8a4b; --accent: #8a5220; --accent-bright: #a5661f; --accent-soft: #ede5de;
+    --bg: #3d2512; --surface: #53341a; --ink: #dcdad8; --ink-soft: #b9afa6;
+    --border: #a76938; --accent: #9f612e; --accent-bright: #8a4f1f; --accent-soft: #ede5de;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #6c431b; --surface: #8c5723; --ink: #dcd1c5; --ink-soft: #cdad86;
-      --border: #c07a37; --accent-soft: #453321;
+      --bg: #22140a; --surface: #342111; --ink: #bfbab7; --ink-soft: #a29488;
+      --border: #915c30; --accent-soft: #493627;
     }
   }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background:
-      linear-gradient(color-mix(in srgb, var(--bg) 87%, transparent), color-mix(in srgb, var(--bg) 87%, transparent)),
-      url('bg-photo.jpg') center/cover fixed;
+    background: var(--bg);
     color: var(--ink);
     margin: 0;
     padding: 2rem 1rem 4rem;
